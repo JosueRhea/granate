@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Network, SquareTerminal } from "lucide-react";
+import { Network } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";

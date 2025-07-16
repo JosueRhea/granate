@@ -15,18 +15,16 @@ export const getWorkflows = query({
     let query = ctx.db.query("workflows");
 
     const organizationId = args.organizationId;
-    console.log("organizationId", organizationId);
-    if (organizationId != null) {
-      // @ts-ignore
-      query = query.withIndex("by_organization", (q) => {
-        return q.eq("organizationId", organizationId);
-      });
-    } else {
-      // @ts-ignore
-      query = query.withIndex("by_user", (q) => {
-        return q.eq("userId", user.subject);
-      });
+    let ownerId = organizationId;
+
+    if (organizationId == null) {
+      ownerId = user.subject;
     }
+    // @ts-ignore
+    query = query.withIndex("byOwner", (q) => {
+      return q.eq("ownerId", ownerId);
+    });
+
     const results = await query.collect();
     return results;
   },
@@ -47,8 +45,8 @@ export const createWorkflow = mutation({
     const workflow = await ctx.db.insert("workflows", {
       name: args.name ?? "Untitled Workflow",
       draft: args.draft,
-      userId: args.organizationId != null ? undefined : user.subject,
-      organizationId: args.organizationId,
+      ownerId: args.organizationId != null ? args.organizationId : user.subject,
+      createdBy: user.subject,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });

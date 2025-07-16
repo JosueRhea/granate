@@ -6,10 +6,10 @@ export default defineSchema({
     name: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
-    userId: v.optional(v.string()),
-    organizationId: v.optional(v.string()),
+    ownerId: v.optional(v.string()),
+    createdBy: v.optional(v.string()),
     draft: v.optional(v.boolean()),
   })
-    .index("by_organization", ["organizationId"])
-    .index("by_user", ["userId"])
+    .index("byOwner", ["ownerId"])
+    .index("byCreatedBy", ["createdBy"]),
 });
