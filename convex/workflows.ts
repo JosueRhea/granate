@@ -12,17 +12,8 @@ export const getWorkflows = query({
       throw new ConvexError("User not authenticated");
     }
 
-    let query = ctx.db.query("workflows");
-
-    const organizationId = args.organizationId;
-    let ownerId = organizationId;
-
-    if (organizationId == null) {
-      ownerId = user.subject;
-    }
-    // @ts-ignore
-    query = query.withIndex("byOwner", (q) => {
-      return q.eq("ownerId", ownerId);
+    let query = ctx.db.query("workflows").withIndex("byOwner", (q) => {
+      return q.eq("ownerId", args.organizationId ?? user.subject);
     });
 
     const results = await query.collect();
