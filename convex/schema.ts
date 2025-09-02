@@ -9,6 +9,7 @@ export default defineSchema({
     ownerId: v.optional(v.string()),
     createdBy: v.optional(v.string()),
     draft: v.optional(v.boolean()),
+    template: v.optional(v.string()),
   })
     .index("byOwner", ["ownerId"])
     .index("byCreatedBy", ["createdBy"]),

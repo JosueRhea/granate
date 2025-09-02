@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { Doc } from "./_generated/dataModel";
 
 export const getWorkflows = query({
   args: {
@@ -43,5 +44,40 @@ export const createWorkflow = mutation({
     });
 
     return workflow;
+  },
+});
+
+export const getWorkflow = query({
+  args: {
+    id: v.id("workflows"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.id);
+  },
+});
+
+export const updateWorkflow = mutation({
+  args: {
+    id: v.id("workflows"),
+    template: v.optional(v.string()),
+    name: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.auth.getUserIdentity();
+    if (user == null) {
+      throw new ConvexError("User not authenticated");
+    }
+
+    let object: Partial<Doc<"workflows">> = {};
+
+    if (args.template != null) {
+      object.template = args.template;
+    }
+
+    if (args.name != null) {
+      object.name = args.name;
+    }
+
+    return await ctx.db.patch(args.id, object);
   },
 });

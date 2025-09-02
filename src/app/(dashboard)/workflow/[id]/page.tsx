@@ -1,13 +1,9 @@
-import { PageHeader } from "@/components/page-header";
-import { Separator } from "@/components/ui/separator";
+import { WorkflowMain } from "@/views/worflow";
 
-const WorflowPage = () => {
-  return (
-    <div>
-      <PageHeader title="Untitled workflow" />
-      <Separator />
-    </div>
-  );
+const WorflowPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
+
+  return <WorkflowMain id={id} />;
 };
 
 export default WorflowPage;

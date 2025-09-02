@@ -7,7 +7,7 @@ import { useMutation, useQuery } from "convex/react";
 import { PlusIcon, SortAscIcon, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useCallback } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { useOrganization } from "@clerk/nextjs";
 
@@ -22,14 +22,14 @@ export default function WorkflowPage() {
   console.log("organization", organization);
   console.log("workflows", workflows);
 
-  const handleCreateWorkflow = async () => {
+  const handleCreateWorkflow = useCallback(async () => {
     const workflow = await createWorflow({
       draft: true,
       name: "Untitled Workflow",
       organizationId: organization?.id,
     });
     router.push(`/workflow/${workflow}`);
-  };
+  }, [createWorflow, organization?.id, router]);
 
   React.useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -55,7 +55,7 @@ export default function WorkflowPage() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, []);
+  }, [handleCreateWorkflow]);
 
   return (
     <div>
